@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class EventBusListener extends LoopRunner implements EventBusClient {
+public abstract class EventBusListener extends EventBusClient {
 
     protected final CopyOnWriteArrayList<Event> eventsQueue = new CopyOnWriteArrayList<>();
     protected final CompletableFuture<Void> listenerThread;
@@ -19,7 +19,7 @@ public abstract class EventBusListener extends LoopRunner implements EventBusCli
         // start listener
         listenerThread = EventBus.runAsync(() ->
         
-                loopUntilStopped(() -> {
+                runContinuously(() -> {
                     Optional<Event> evt = eventsQueue.stream().findFirst();
                     evt.ifPresent(event -> {
                         onEvent(event);
