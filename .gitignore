@@ -1,0 +1,9 @@
+/.idea/**
+**/target/**
+**/*.iml
+**/logs/**/*log.*
+/config/**
+etrex-uploader-core/config.properties
+**/src/main/resources/application-local.properties
+/target/
+/bin/
