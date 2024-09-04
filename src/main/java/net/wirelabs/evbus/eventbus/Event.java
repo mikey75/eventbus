@@ -1,4 +1,4 @@
-package net.wirelabs.eventbus;
+package net.wirelabs.evbus.eventbus;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class Event {
-    private final IEventType eventType;
+    private final Object eventType;
     private final Object payload;
 }
