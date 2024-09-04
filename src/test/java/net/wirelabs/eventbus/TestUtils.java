@@ -1,7 +1,5 @@
-package eventbus;
+package net.wirelabs.eventbus;
 
-import net.wirelabs.evbus.eventbus.EventBus;
-import net.wirelabs.evbus.eventbus.EventBusClient;
 import org.assertj.core.api.Assertions;
 
 /**

@@ -1,8 +1,6 @@
-package eventbus;
+package net.wirelabs.eventbus;
 
 import lombok.extern.slf4j.Slf4j;
-import net.wirelabs.evbus.eventbus.Event;
-import net.wirelabs.evbus.eventbus.EventBusClient;
 
 import java.util.ArrayList;
 import java.util.List;

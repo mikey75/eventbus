@@ -1,8 +1,7 @@
-package eventbus;
+package net.wirelabs.eventbus;
 
 import lombok.Getter;
-import net.wirelabs.evbus.eventbus.Event;
-import net.wirelabs.evbus.eventbus.swing.EventAwarePanel;
+import net.wirelabs.eventbus.swing.EventAwarePanel;
 
 import javax.swing.*;
 import java.util.Collection;

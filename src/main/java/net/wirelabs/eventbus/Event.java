@@ -1,4 +1,4 @@
-package net.wirelabs.evbus.eventbus;
+package net.wirelabs.eventbus;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

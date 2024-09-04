@@ -1,4 +1,4 @@
-package net.wirelabs.evbus.eventbus;
+package net.wirelabs.eventbus;
 
 public interface EventExecutor {
     void onEvent(Event evt);

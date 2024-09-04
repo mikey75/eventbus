@@ -1,8 +1,8 @@
-package net.wirelabs.evbus.eventbus.swing;
+package net.wirelabs.eventbus.swing;
 
-import net.wirelabs.evbus.eventbus.Event;
-import net.wirelabs.evbus.eventbus.EventBus;
-import net.wirelabs.evbus.eventbus.EventBusClient;
+import net.wirelabs.eventbus.Event;
+import net.wirelabs.eventbus.EventBus;
+import net.wirelabs.eventbus.EventBusClient;
 
 import javax.swing.*;
 import java.util.Collection;
