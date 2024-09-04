@@ -18,4 +18,5 @@ public class TestUtils {
             Assertions.assertThat(c.getThreadHandle().isDone()).isTrue();
         }
     }
+    void dupe(){}
 }
