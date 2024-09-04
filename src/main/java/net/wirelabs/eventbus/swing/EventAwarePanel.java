@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public abstract class EventAwarePanel extends JPanel  {
 
-    private EventBusClient eventListener;
+    private EventBusClient eventBusClient;
     protected EventAwarePanel() {
         eventHandlerInitialize();
     }
@@ -19,13 +19,13 @@ public abstract class EventAwarePanel extends JPanel  {
 
     protected void subscribe(Object ...events) {
         for (Object evt: events) {
-            EventBus.register(eventListener,evt);
+            EventBus.register(eventBusClient,evt);
         }
     }
 
     private void eventHandlerInitialize() {
 
-        eventListener = new EventBusClient() {
+        eventBusClient = new EventBusClient() {
             @Override
             public void onEvent(Event evt) {
                 SwingUtilities.invokeLater(() -> EventAwarePanel.this.onEvent(evt));
@@ -33,7 +33,7 @@ public abstract class EventAwarePanel extends JPanel  {
         };
 
         for (Object evt : subscribeEvents()) {
-            EventBus.register(eventListener, evt);
+            EventBus.register(eventBusClient, evt);
         }
 
     }

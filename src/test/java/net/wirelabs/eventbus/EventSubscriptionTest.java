@@ -16,26 +16,26 @@ class EventSubscriptionTest {
     }
 
     @Test
-    void shouldSubscribeMultipleListenersToMultipleEvents() {
+    void shouldSubscribeMultipleClientsToMultipleEvents() {
 
         // given
-        EventBusClient listener1 = new TesteEventBusClient();
-        EventBusClient listener2 = new TesteEventBusClient();
-        EventBusClient listener3 = new TesteEventBusClient();
+        EventBusClient client1 = new TesteEventBusClient();
+        EventBusClient client2 = new TesteEventBusClient();
+        EventBusClient client3 = new TesteEventBusClient();
 
         // when
-        listener1.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2, TestUtils.EVENT_3);
-        listener2.subscribe(TestUtils.EVENT_1);
-        listener3.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_4);
+        client1.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2, TestUtils.EVENT_3);
+        client2.subscribe(TestUtils.EVENT_1);
+        client3.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_4);
 
         //then
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(listener1, listener2, listener3);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_2)).containsOnly(listener1);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_3)).containsOnly(listener1);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_4)).containsOnly(listener3);
+        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(client1, client2, client3);
+        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_2)).containsOnly(client1);
+        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_3)).containsOnly(client1);
+        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_4)).containsOnly(client3);
 
         EventBus.shutdown();
-        TestUtils.shutdownAndAssertFinishedClients(listener1,listener3,listener2);
+        TestUtils.shutdownAndAssertFinishedClients(client1,client3,client2);
 
 
     }
@@ -43,37 +43,37 @@ class EventSubscriptionTest {
     @Test
     void shouldRegisterTwoEvents() {
         // given
-        EventBusClient listener2 = new TesteEventBusClient();
-        EventBusClient listener3 = new TesteEventBusClient();
+        EventBusClient client2 = new TesteEventBusClient();
+        EventBusClient client3 = new TesteEventBusClient();
 
         // given
-        listener2.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
-        listener3.subscribe(TestUtils.EVENT_1);
+        client2.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
+        client3.subscribe(TestUtils.EVENT_1);
 
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(listener2, listener3);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_2)).containsOnly(listener2);
-        TestUtils.shutdownAndAssertFinishedClients(listener2,listener3);
+        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(client2, client3);
+        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_2)).containsOnly(client2);
+        TestUtils.shutdownAndAssertFinishedClients(client2,client3);
 
     }
 
     @Test
     void shouldIgnoreSameEventTypeOnSubscriber() {
-        EventBusClient listener1 = new TesteEventBusClient();
+        EventBusClient client1 = new TesteEventBusClient();
 
-        listener1.subscribe(TestUtils.EVENT_1);
-        listener1.subscribe(TestUtils.EVENT_1);
-        listener1.subscribe(TestUtils.EVENT_1);
+        client1.subscribe(TestUtils.EVENT_1);
+        client1.subscribe(TestUtils.EVENT_1);
+        client1.subscribe(TestUtils.EVENT_1);
 
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(listener1);
-        TestUtils.shutdownAndAssertFinishedClients(listener1);
+        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(client1);
+        TestUtils.shutdownAndAssertFinishedClients(client1);
 
     }
 
     @Test
     void shouldIgnoreRegistrationWithoutEvent() {
-        EventBusClient listener1 = new TesteEventBusClient();
-        listener1.subscribe(); // no event
-        assertThat(listener1.getEventsQueue()).isEmpty();
+        EventBusClient client1 = new TesteEventBusClient();
+        client1.subscribe(); // no event
+        assertThat(client1.getEventsQueue()).isEmpty();
     }
 
 }

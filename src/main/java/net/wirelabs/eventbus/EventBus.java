@@ -18,20 +18,19 @@ public class EventBus {
     @Getter
     private static final Map<Object, Set<EventBusClient>> subscribersByEventType = new HashMap<>();
     @Getter
-    private static final Set<EventBusClient> uniqueListeners = new HashSet<>();
+    private static final Set<EventBusClient> uniqueClients = new HashSet<>();
     @Getter
     private static final List<Event> deadEvents = new ArrayList<>();
     @Getter
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public static void shutdown() {
-        // stop all listeners
-
-        for (EventBusClient listener : uniqueListeners) {
-            log.info("Stopping listener: {}", listener);
-            listener.stop();
-            // wait for listener termination
-            while (!listener.getThreadHandle().isDone()) {
+        // stop all clients
+        for (EventBusClient client : uniqueClients) {
+            log.info("Stopping client: {}", client);
+            client.stop();
+            // wait for client termination
+            while (!client.getThreadHandle().isDone()) {
                 Sleeper.sleepMillis(100);
             }
         }
@@ -39,11 +38,11 @@ public class EventBus {
     }
 
 
-    public static void register(EventBusClient listener, Object... eventTypes) {
+    public static void register(EventBusClient client, Object... eventTypes) {
         for (Object evt : eventTypes) {
             subscribersByEventType.computeIfAbsent(evt, k -> new HashSet<>());
-            subscribersByEventType.get(evt).add(listener);
-            uniqueListeners.add(listener);
+            subscribersByEventType.get(evt).add(client);
+            uniqueClients.add(client);
 
         }
 
@@ -61,8 +60,8 @@ public class EventBus {
 
         if (subscribersByEventType.containsKey(evt)) {
             Set<EventBusClient> subs = subscribersByEventType.get(evt);
-            for (EventBusClient listener : subs) {
-                listener.getEventsQueue().add(event);
+            for (EventBusClient client : subs) {
+                client.getEventsQueue().add(event);
             }
         } else {
             deadEvents.add(event);

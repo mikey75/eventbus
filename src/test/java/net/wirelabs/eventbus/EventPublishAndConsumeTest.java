@@ -16,7 +16,7 @@ class EventPublishAndConsumeTest {
     @BeforeEach
     void before() {
         EventBus.getSubscribersByEventType().clear();
-        EventBus.getUniqueListeners().clear();
+        EventBus.getUniqueClients().clear();
         EventBus.getDeadEvents().clear();
     }
 
@@ -95,12 +95,12 @@ class EventPublishAndConsumeTest {
         TesteEventBusClient client2 = new TesteEventBusClient();
         TesteEventBusClient client3 = new TesteEventBusClient();
 
-        // first subscribe some unique listeners
+        // first subscribe some unique clients
         client1.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
         client2.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
         client3.subscribe(TestUtils.EVENT_1);
 
-        assertThat(EventBus.getUniqueListeners()).hasSize(3);
+        assertThat(EventBus.getUniqueClients()).hasSize(3);
         TestUtils.shutdownAndAssertFinishedClients(client1,client2,client3);
 
     }
