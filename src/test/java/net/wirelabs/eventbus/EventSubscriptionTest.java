@@ -3,6 +3,9 @@ package net.wirelabs.eventbus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -24,15 +27,15 @@ class EventSubscriptionTest {
         EventBusClient client3 = new TesteEventBusClient();
 
         // when
-        client1.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2, TestUtils.EVENT_3);
-        client2.subscribe(TestUtils.EVENT_1);
-        client3.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_4);
+        client1.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_2, EventTypes.EVENT_3);
+        client2.subscribe(EventTypes.EVENT_1);
+        client3.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_4);
 
         //then
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(client1, client2, client3);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_2)).containsOnly(client1);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_3)).containsOnly(client1);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_4)).containsOnly(client3);
+        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_1)).containsOnly(client1, client2, client3);
+        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_2)).containsOnly(client1);
+        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_3)).containsOnly(client1);
+        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_4)).containsOnly(client3);
 
         EventBus.shutdown();
         TestUtils.shutdownAndAssertFinishedClients(client1,client3,client2);
@@ -47,11 +50,11 @@ class EventSubscriptionTest {
         EventBusClient client3 = new TesteEventBusClient();
 
         // given
-        client2.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
-        client3.subscribe(TestUtils.EVENT_1);
+        client2.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_2);
+        client3.subscribe(EventTypes.EVENT_1);
 
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(client2, client3);
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_2)).containsOnly(client2);
+        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_1)).containsOnly(client2, client3);
+        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_2)).containsOnly(client2);
         TestUtils.shutdownAndAssertFinishedClients(client2,client3);
 
     }
@@ -60,20 +63,15 @@ class EventSubscriptionTest {
     void shouldIgnoreSameEventTypeOnSubscriber() {
         EventBusClient client1 = new TesteEventBusClient();
 
-        client1.subscribe(TestUtils.EVENT_1);
-        client1.subscribe(TestUtils.EVENT_1);
-        client1.subscribe(TestUtils.EVENT_1);
+        client1.subscribe(EventTypes.EVENT_1);
+        client1.subscribe(EventTypes.EVENT_1);
+        client1.subscribe(EventTypes.EVENT_1);
 
-        assertThat(EventBus.getSubscribersByEventType().get(TestUtils.EVENT_1)).containsOnly(client1);
+        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_1)).containsOnly(client1);
         TestUtils.shutdownAndAssertFinishedClients(client1);
 
     }
 
-    @Test
-    void shouldIgnoreRegistrationWithoutEvent() {
-        EventBusClient client1 = new TesteEventBusClient();
-        client1.subscribe(); // no event
-        assertThat(client1.getEventsQueue()).isEmpty();
-    }
+
 
 }

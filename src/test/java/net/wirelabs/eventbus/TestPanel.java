@@ -23,12 +23,12 @@ public class TestPanel extends EventAwarePanel {
     }
 
     @Override
-    protected Collection<Object> subscribeEvents() {
-        return List.of(TestUtils.EVENT_1);
+    protected Collection<IEventType> subscribeEvents() {
+        return List.of(EventTypes.EVENT_1);
     }
 
     @Override
-    protected void subscribe(Object... events) {
+    protected void subscribe(IEventType... events) {
         super.subscribe(events);
     }
 }

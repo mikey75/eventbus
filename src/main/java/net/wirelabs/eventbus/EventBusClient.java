@@ -39,11 +39,11 @@ public abstract class EventBusClient implements Runnable, EventExecutor {
         });
         Sleeper.sleepMillis(50);
     }
-
-    public void subscribe(Object... eventTypes) {
+    // subscribe by event type
+    public void subscribe(IEventType... eventTypes) {
         EventBus.register(this, eventTypes);
     }
-
+    // subscribe by event object
     public void subscribe(Event ... events) {
         for (Event ev: events) {
             EventBus.register(this, ev.getEventType());

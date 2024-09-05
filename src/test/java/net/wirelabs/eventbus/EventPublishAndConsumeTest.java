@@ -28,25 +28,25 @@ class EventPublishAndConsumeTest {
         TesteEventBusClient client3 = new TesteEventBusClient();
 
         // test subscription by eventtype
-        client1.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
-        client2.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
+        client1.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_2);
+        client2.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_2);
 
-        client3.subscribe(TestUtils.EVENT_1);
+        client3.subscribe(EventTypes.EVENT_1);
 
-        EventBus.publish(TestUtils.EVENT_1,"x");
-        EventBus.publish(TestUtils.EVENT_2,"x");
-        EventBus.publish(TestUtils.EVENT_2,"x");
-        EventBus.publish(TestUtils.EVENT_2,"x");
-        EventBus.publish(TestUtils.EVENT_2,"x");
+        EventBus.publish(EventTypes.EVENT_1,"x");
+        EventBus.publish(EventTypes.EVENT_2,"x");
+        EventBus.publish(EventTypes.EVENT_2,"x");
+        EventBus.publish(EventTypes.EVENT_2,"x");
+        EventBus.publish(EventTypes.EVENT_2,"x");
 
         Sleeper.sleepSeconds(1);
-        List<Object> client1EventTypes = client1.eventsConsumed.stream().map(Event::getEventType).collect(Collectors.toList());
-        List<Object> client2EventTypes = client2.eventsConsumed.stream().map(Event::getEventType).collect(Collectors.toList());
-        List<Object> client3EventTypes = client3.eventsConsumed.stream().map(Event::getEventType).collect(Collectors.toList());
+        List<IEventType> client1EventTypes = client1.eventsConsumed.stream().map(Event::getEventType).collect(Collectors.toList());
+        List<IEventType> client2EventTypes = client2.eventsConsumed.stream().map(Event::getEventType).collect(Collectors.toList());
+        List<IEventType> client3EventTypes = client3.eventsConsumed.stream().map(Event::getEventType).collect(Collectors.toList());
 
-        assertThat(client1EventTypes).containsExactly(TestUtils.EVENT_1, TestUtils.EVENT_2, TestUtils.EVENT_2, TestUtils.EVENT_2, TestUtils.EVENT_2);
-        assertThat(client2EventTypes).containsExactly(TestUtils.EVENT_1, TestUtils.EVENT_2, TestUtils.EVENT_2, TestUtils.EVENT_2, TestUtils.EVENT_2);
-        assertThat(client3EventTypes).containsOnly(TestUtils.EVENT_1);
+        assertThat(client1EventTypes).containsExactly(EventTypes.EVENT_1, EventTypes.EVENT_2, EventTypes.EVENT_2, EventTypes.EVENT_2, EventTypes.EVENT_2);
+        assertThat(client2EventTypes).containsExactly(EventTypes.EVENT_1, EventTypes.EVENT_2, EventTypes.EVENT_2, EventTypes.EVENT_2, EventTypes.EVENT_2);
+        assertThat(client3EventTypes).containsOnly(EventTypes.EVENT_1);
         TestUtils.shutdownAndAssertFinishedClients(client1,client2,client3);
 
     }
@@ -56,8 +56,8 @@ class EventPublishAndConsumeTest {
         TesteEventBusClient client1 = new TesteEventBusClient();
         TesteEventBusClient client2 = new TesteEventBusClient();
         TesteEventBusClient client3 = new TesteEventBusClient();
-        Event ev1 = new Event(TestUtils.EVENT_1,"ev1");
-        Event ev2 = new Event(TestUtils.EVENT_2,"ev2");
+        Event ev1 = new Event(EventTypes.EVENT_1,"ev1");
+        Event ev2 = new Event(EventTypes.EVENT_2,"ev2");
 
         // test subscription by eventtype
         client1.subscribe(ev1, ev2);
@@ -79,12 +79,12 @@ class EventPublishAndConsumeTest {
 
     @Test
     void shouldRegisterDeadEventWhenPublishingBeforeASubscriberIsSubscribed() {
-        Object obj = "1234";
-        Event ev = new Event(TestUtils.EVENT_1, obj);
+        Object payload = "1234";
+        Event ev = new Event(EventTypes.EVENT_1, payload);
         EventBus.publish(ev);
         assertThat(EventBus.getDeadEvents()).hasSize(1);
-        assertThat(EventBus.getDeadEvents().get(0).getEventType()).isEqualTo(TestUtils.EVENT_1);
-        assertThat(EventBus.getDeadEvents().get(0).getPayload()).isEqualTo(obj);
+        assertThat(EventBus.getDeadEvents().get(0).getEventType()).isEqualTo(EventTypes.EVENT_1);
+        assertThat(EventBus.getDeadEvents().get(0).getPayload()).isEqualTo(payload);
 
     }
 
@@ -96,9 +96,9 @@ class EventPublishAndConsumeTest {
         TesteEventBusClient client3 = new TesteEventBusClient();
 
         // first subscribe some unique clients
-        client1.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
-        client2.subscribe(TestUtils.EVENT_1, TestUtils.EVENT_2);
-        client3.subscribe(TestUtils.EVENT_1);
+        client1.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_2);
+        client2.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_2);
+        client3.subscribe(EventTypes.EVENT_1);
 
         assertThat(EventBus.getUniqueClients()).hasSize(3);
         TestUtils.shutdownAndAssertFinishedClients(client1,client2,client3);

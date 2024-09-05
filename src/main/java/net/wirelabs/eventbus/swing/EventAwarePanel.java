@@ -3,6 +3,7 @@ package net.wirelabs.eventbus.swing;
 import net.wirelabs.eventbus.Event;
 import net.wirelabs.eventbus.EventBus;
 import net.wirelabs.eventbus.EventBusClient;
+import net.wirelabs.eventbus.IEventType;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -10,15 +11,15 @@ import java.util.Collection;
 
 public abstract class EventAwarePanel extends JPanel  {
 
-    private EventBusClient eventBusClient;
+    private transient EventBusClient eventBusClient;
     protected EventAwarePanel() {
         eventHandlerInitialize();
     }
     protected abstract void onEvent(Event evt);
-    protected abstract Collection<Object> subscribeEvents();
+    protected abstract Collection<IEventType> subscribeEvents();
 
-    protected void subscribe(Object ...events) {
-        for (Object evt: events) {
+    protected void subscribe(IEventType ...events) {
+        for (IEventType evt: events) {
             EventBus.register(eventBusClient,evt);
         }
     }
@@ -32,7 +33,7 @@ public abstract class EventAwarePanel extends JPanel  {
             }
         };
 
-        for (Object evt : subscribeEvents()) {
+        for (IEventType evt : subscribeEvents()) {
             EventBus.register(eventBusClient, evt);
         }
 
