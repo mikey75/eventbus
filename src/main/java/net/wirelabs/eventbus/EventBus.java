@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 @Slf4j
@@ -25,6 +26,7 @@ public class EventBus {
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public static void shutdown() {
+        log.info("Shutting down the EventBus");
         // stop all clients
         for (EventBusClient client : uniqueClients) {
             log.info("Stopping client: {}", client);
@@ -32,6 +34,11 @@ public class EventBus {
             // wait for client termination
             while (!client.getThreadHandle().isDone()) {
                 Sleeper.sleepMillis(100);
+            }
+            // if pool is now still not empty -> shutdown executor
+            if (!((ThreadPoolExecutor) executorService).getQueue().isEmpty()){
+                executorService.shutdown();
+                return;
             }
         }
 
