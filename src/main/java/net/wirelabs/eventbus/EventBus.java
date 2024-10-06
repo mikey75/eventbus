@@ -43,20 +43,15 @@ public class EventBus {
         if (!((ThreadPoolExecutor) executorService).getQueue().isEmpty()){
             executorService.shutdown();
         }
-
     }
-
 
     public static void register(EventBusClient client, IEventType... eventTypes) {
         for (IEventType evt : eventTypes) {
             subscribersByEventType.computeIfAbsent(evt, k -> new HashSet<>());
             subscribersByEventType.get(evt).add(client);
             uniqueClients.add(client);
-
         }
-
     }
-
 
     /**
      * Publish event
@@ -84,11 +79,8 @@ public class EventBus {
      * @param payload   payload object
      */
     public static void publish(IEventType eventType, Object payload) {
-        // get all listners subscribed to the event
         Event event = new Event(eventType, payload);
         publish(event);
-
-
     }
 }
 

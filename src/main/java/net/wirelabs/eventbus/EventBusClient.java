@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created 6/21/22 by Michał Szwaczko (mikey@wirelabs.net)
  */
 @Getter
-public abstract class EventBusClient implements Runnable, EventExecutor {
+public abstract class EventBusClient implements EventExecutor {
 
     private final AtomicBoolean shouldExit = new AtomicBoolean(false);
     private final CompletableFuture<Void> threadHandle;
@@ -40,17 +40,17 @@ public abstract class EventBusClient implements Runnable, EventExecutor {
         Sleeper.sleepMillis(50);
     }
     // subscribe by event type
-    public void subscribe(IEventType... eventTypes) {
+    protected void subscribe(IEventType... eventTypes) {
         EventBus.register(this, eventTypes);
     }
     // subscribe by event object
-    public void subscribe(Event ... events) {
+    protected void subscribe(Event ... events) {
         for (Event ev: events) {
             EventBus.register(this, ev.getEventType());
         }
     }
 
-    public void stop() {
+    protected void stop() {
         shouldExit.set(true);
         if (threadHandle != null) {
             threadHandle.join();
