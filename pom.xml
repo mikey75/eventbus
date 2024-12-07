@@ -153,12 +153,8 @@
             <artifactId>logback-classic</artifactId>
             <version>1.4.14</version>
         </dependency>
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>${jacoco.version}</version>
-        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -172,13 +168,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>com/strava/**</exclude>
-                        <exclude>com/topografix/**</exclude>
-                        <exclude>com/garmin/**</exclude>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
                         <id>jacoco-initialize</id>
