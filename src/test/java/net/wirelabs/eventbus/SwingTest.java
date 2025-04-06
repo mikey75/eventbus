@@ -22,7 +22,7 @@ class SwingTest {
         Awaitility.waitAtMost(Duration.ofSeconds(5)).untilAsserted(() -> assertThat(panel.getTextfield().getText()).isEqualTo("123"));
         EventBus.publish(EventTypes.EVENT_2, "321");
         Awaitility.waitAtMost(Duration.ofSeconds(5)).untilAsserted(() -> assertThat(panel.getTextfield().getText()).isEqualTo("321"));
-
+        TestUtils.shutdownAndAssertFinishedClients();
     }
 }
 

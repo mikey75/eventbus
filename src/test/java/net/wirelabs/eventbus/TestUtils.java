@@ -11,6 +11,9 @@ public class TestUtils {
         EventBus.shutdown();
         for (EventBusClient c: clients) {
             Assertions.assertThat(c.getThreadHandle().isDone()).isTrue();
+            Assertions.assertThat(EventBus.getUniqueClients()).isEmpty();
+            Assertions.assertThat(EventBus.getDeadEvents()).isEmpty();
+            Assertions.assertThat(EventBus.getSubscribersByEventType()).isEmpty();
         }
     }
 }

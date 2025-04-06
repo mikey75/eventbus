@@ -34,7 +34,6 @@ class EventSubscriptionTest {
         assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_3)).containsOnly(client1);
         assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_4)).containsOnly(client3);
 
-        EventBus.shutdown();
         TestUtils.shutdownAndAssertFinishedClients(client1,client3,client2);
 
 

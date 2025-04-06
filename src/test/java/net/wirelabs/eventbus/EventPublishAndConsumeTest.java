@@ -1,6 +1,5 @@
 package net.wirelabs.eventbus;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -11,14 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 class EventPublishAndConsumeTest {
-
-
-    @BeforeEach
-    void before() {
-        EventBus.getSubscribersByEventType().clear();
-        EventBus.getUniqueClients().clear();
-        EventBus.getDeadEvents().clear();
-    }
 
     @Test
     void shouldPublishEventToAllSubscribersByEventType() {
@@ -79,13 +70,16 @@ class EventPublishAndConsumeTest {
 
     @Test
     void shouldRegisterDeadEventWhenPublishingBeforeASubscriberIsSubscribed() {
+        // make sure no client is subscribed to event_1 at this time
+        assertThat(EventBus.getSubscribersByEventType()).doesNotContainKey(EventTypes.EVENT_1);
+
         Object payload = "1234";
         Event ev = new Event(EventTypes.EVENT_1, payload);
         EventBus.publish(ev);
         assertThat(EventBus.getDeadEvents()).hasSize(1);
         assertThat(EventBus.getDeadEvents().get(0).getEventType()).isEqualTo(EventTypes.EVENT_1);
         assertThat(EventBus.getDeadEvents().get(0).getPayload()).isEqualTo(payload);
-
+        TestUtils.shutdownAndAssertFinishedClients();
     }
 
     @Test

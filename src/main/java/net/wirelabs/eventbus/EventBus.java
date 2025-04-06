@@ -43,6 +43,10 @@ public class EventBus {
         if (!((ThreadPoolExecutor) executorService).getQueue().isEmpty()){
             executorService.shutdown();
         }
+        // finally clear the lists (they're static) just in case
+        uniqueClients.clear();
+        deadEvents.clear();
+        subscribersByEventType.clear();
     }
 
     public static void register(EventBusClient client, IEventType... eventTypes) {
