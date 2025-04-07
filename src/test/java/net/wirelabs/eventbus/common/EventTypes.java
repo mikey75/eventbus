@@ -1,4 +1,6 @@
-package net.wirelabs.eventbus;
+package net.wirelabs.eventbus.common;
+
+import net.wirelabs.eventbus.IEventType;
 
 public enum EventTypes implements IEventType {
 
