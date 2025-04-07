@@ -1,6 +1,9 @@
-package net.wirelabs.eventbus;
+package net.wirelabs.eventbus.testclients;
 
 import lombok.Getter;
+import net.wirelabs.eventbus.Event;
+import net.wirelabs.eventbus.common.EventTypes;
+import net.wirelabs.eventbus.IEventType;
 import net.wirelabs.eventbus.swing.EventAwarePanel;
 
 import javax.swing.*;
@@ -14,7 +17,7 @@ public class TestPanel extends EventAwarePanel {
     public TestPanel() {
         textfield = new JTextField();
         add(textfield);
-        }
+    }
 
     @Override
     protected void onEvent(Event evt) {
@@ -27,8 +30,4 @@ public class TestPanel extends EventAwarePanel {
         return List.of(EventTypes.EVENT_1);
     }
 
-    @Override
-    protected void subscribe(IEventType... events) {
-        super.subscribe(events);
-    }
 }

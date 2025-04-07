@@ -14,47 +14,34 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Getter
 public abstract class EventBusClient implements EventExecutor {
 
-    private final AtomicBoolean shouldExit = new AtomicBoolean(false);
-    private final CompletableFuture<Void> threadHandle;
-
-    // events queue for client
-    private final CopyOnWriteArrayList<Event> eventsQueue = new CopyOnWriteArrayList<>();
-
+    private final CopyOnWriteArrayList<Event> eventsQueue = new CopyOnWriteArrayList<>(); // events queue for client
+    private final AtomicBoolean shouldExit = new AtomicBoolean(false);         // thread exit flag
+    private final CompletableFuture<Void> threadHandle = CompletableFuture.runAsync(this,EventBus.getExecutorService());     // thread handle
 
     protected EventBusClient() {
-        threadHandle =  CompletableFuture.runAsync(this, EventBus.getExecutorService());
+        for (IEventType e: subscribeEvents()) {
+            EventBus.register(this, e);
+        }
+    }
+
+    // subscribe by event type
+    public void subscribe(IEventType... eventTypes) {
+        EventBus.register(this, eventTypes);
     }
 
     public void run() {
         while(!shouldExit.get()) {
-            processEvents();
-        }
-    }
-
-    private void processEvents() {
-        Optional<Event> evt = eventsQueue.stream().findFirst();
-        evt.ifPresent(event -> {
-            onEvent(event);
-            eventsQueue.remove(event);
-        });
-        Sleeper.sleepMillis(50);
-    }
-    // subscribe by event type
-    protected void subscribe(IEventType... eventTypes) {
-        EventBus.register(this, eventTypes);
-    }
-    // subscribe by event object
-    protected void subscribe(Event ... events) {
-        for (Event ev: events) {
-            EventBus.register(this, ev.getEventType());
+            Optional<Event> evt = eventsQueue.stream().findFirst();
+            evt.ifPresent(event -> {
+                onEvent(event);
+                eventsQueue.remove(event);
+            });
+            Sleeper.sleepMillis(50);
         }
     }
 
     protected void stop() {
         shouldExit.set(true);
-        if (threadHandle != null) {
-            threadHandle.join();
-        }
+        threadHandle.join();
     }
-
 }

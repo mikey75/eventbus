@@ -10,10 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-
 public class EventBus {
 
     @Getter
@@ -72,7 +70,7 @@ public class EventBus {
                 client.getEventsQueue().add(event);
             }
         } else {
-            deadEvents.add(event); // do we really need dead events? if nothing is subscribed to the event, just ignore it, diregard
+            deadEvents.add(event); // do we really need dead events? if nothing is subscribed to the event, just ignore it, disregard
         }
     }
 
@@ -87,4 +85,5 @@ public class EventBus {
         publish(event);
     }
 }
+
 
