@@ -2,6 +2,7 @@ package net.wirelabs.eventbus;
 
 import lombok.Getter;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,8 +20,9 @@ public abstract class EventBusClient implements EventExecutor {
     private final CompletableFuture<Void> threadHandle = CompletableFuture.runAsync(this,EventBus.getExecutorService());     // thread handle
 
     protected EventBusClient() {
-        for (IEventType e: subscribeEvents()) {
-            EventBus.register(this, e);
+        Collection<IEventType> events = subscribeEvents();
+        if (events != null) {
+            EventBus.register(this, events.toArray(new IEventType[0]));
         }
     }
 

@@ -4,6 +4,7 @@ import net.wirelabs.eventbus.*;
 
 import javax.swing.*;
 import java.util.Collection;
+import java.util.Collections;
 
 
 public abstract class EventAwarePanel extends JPanel  {
@@ -24,7 +25,8 @@ public abstract class EventAwarePanel extends JPanel  {
 
             @Override
             public Collection<IEventType> subscribeEvents() {
-                return EventAwarePanel.this.subscribeEvents();
+                Collection<IEventType> events = EventAwarePanel.this.subscribeEvents();
+                return events != null ? events : Collections.emptyList();
             }
 
         };
