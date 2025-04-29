@@ -4,7 +4,7 @@
     <groupId>net.wirelabs</groupId>
     <artifactId>eventbus</artifactId>
     <packaging>jar</packaging>
-    <version>1.2.2</version>
+    <version>1.2.3-SNAPSHOT</version>
 
     <name>eventbus</name>
     <description>Poor Man's Event Bus</description>
@@ -30,7 +30,7 @@
         <developerConnection>scm:git:git@github.com:mikey75/eventbus.git</developerConnection>
         <connection>scm:git:git@github.com:mikey75/eventbus.git</connection>
         <url>git@github.com:mikey75/eventbus.git</url>
-        <tag>eventbus-1.2.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
