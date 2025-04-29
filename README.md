@@ -8,11 +8,11 @@ to become a universal event bus.
 
 # Usage: 
 
-Currently latest deployed to maven central is version 1.2.1
+Currently latest deployed can be found in top bar maven central icon 
 
         <dependency>
             <groupId>net.wirelabs</groupId>
             <artifactId>eventbus</artifactId>
-            <version>1.2.1</version>
+            <version>$version</version>
         </dependency>
 
