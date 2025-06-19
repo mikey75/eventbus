@@ -41,7 +41,7 @@
         <jacoco.version>0.8.12</jacoco.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+        <jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</jacoco.xmlReportPaths>
         <sonar.language>java</sonar.language>
 
     </properties>
@@ -131,6 +131,12 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <version>4.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
             <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
