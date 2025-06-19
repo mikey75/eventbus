@@ -26,28 +26,17 @@ public class EventBus {
     public static void shutdown() {
         log.info("Shutting down the EventBus");
         // stop all clients
-        for (EventBusClient client : uniqueClients) {
-            log.info("Stopping client: {}", client);
-            client.stop();
-            // wait for client termination
-            // actually in normal work it won't happen since all clients
-            // will be stopped and removed from queue but for completeness
-            while (!client.getThreadHandle().isDone()) {
-                Sleeper.sleepMillis(100);
-            }
-
-        }
-        // if pool is still not empty -> shutdown executor the hard way
-        if (!((ThreadPoolExecutor) executorService).getQueue().isEmpty()){
-            executorService.shutdown();
-        }
+        stopAllClients();
         // finally clear the lists (they're static) just in case
-        uniqueClients.clear();
-        deadEvents.clear();
-        subscribersByEventType.clear();
+        clearState();
     }
 
-    public static void register(EventBusClient client, IEventType... eventTypes) {
+    /**
+     * Subscribe event types to react to
+     * @param client client that is registering
+     * @param eventTypes event types
+     */
+    public static void subscribe(EventBusClient client, IEventType... eventTypes) {
         for (IEventType evt : eventTypes) {
             subscribersByEventType.computeIfAbsent(evt, k -> new HashSet<>());
             subscribersByEventType.get(evt).add(client);
@@ -83,6 +72,30 @@ public class EventBus {
     public static void publish(IEventType eventType, Object payload) {
         Event event = new Event(eventType, payload);
         publish(event);
+    }
+
+    private static void clearState() {
+        uniqueClients.clear();
+        deadEvents.clear();
+        subscribersByEventType.clear();
+    }
+
+    private static void stopAllClients() {
+        for (EventBusClient client : uniqueClients) {
+            log.info("Stopping client: {}", client);
+            client.stop();
+            // wait for client termination
+            // actually in normal work it won't happen since all clients
+            // will be stopped and removed from queue but for completeness
+            while (!client.getThreadHandle().isDone()) {
+                Sleeper.sleepMillis(100);
+            }
+
+        }
+        // if pool is still not empty -> shutdown executor the hard way
+        if (!((ThreadPoolExecutor) executorService).getQueue().isEmpty()){
+            executorService.shutdown();
+        }
     }
 }
 

@@ -22,13 +22,13 @@ public abstract class EventBusClient implements EventExecutor {
     protected EventBusClient() {
         Collection<IEventType> events = subscribeEvents();
         if (events != null) {
-            EventBus.register(this, events.toArray(new IEventType[0]));
+            EventBus.subscribe(this, events.toArray(new IEventType[0]));
         }
     }
 
     // subscribe by event type
     public void subscribe(IEventType... eventTypes) {
-        EventBus.register(this, eventTypes);
+        EventBus.subscribe(this, eventTypes);
     }
 
     public void run() {

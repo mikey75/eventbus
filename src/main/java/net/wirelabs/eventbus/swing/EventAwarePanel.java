@@ -33,7 +33,7 @@ public abstract class EventAwarePanel extends JPanel  {
     }
 
     public void subscribe(IEventType ... eventTypes) {
-        EventBus.register(client, eventTypes);
+        EventBus.subscribe(client, eventTypes);
     }
 }
 
