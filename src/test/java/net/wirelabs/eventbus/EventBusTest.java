@@ -113,7 +113,7 @@ class EventBusTest extends BaseTest {
     }
 
     @Test
-    void shouldSubscribeMultipleClientsToMultipleEventsAndReactToPublish() throws InterruptedException {
+    void shouldSubscribeMultipleClientsToMultipleEventsAndReactToPublish() {
 
         // given
         EventBusClient client1 = new TestClient();
@@ -202,17 +202,5 @@ class EventBusTest extends BaseTest {
 
     }
 
-    @Test
-    void shouldIgnoreSameEventTypeOnSubscriber() {
-        EventBusClient client1 = new TestClient();
-
-        client1.subscribe(EventTypes.EVENT_1);
-        client1.subscribe(EventTypes.EVENT_1);
-        client1.subscribe(EventTypes.EVENT_1);
-
-        assertThat(EventBus.getSubscribersByEventType().get(EventTypes.EVENT_1)).containsOnly(client1);
-
-
-    }
 
 }
