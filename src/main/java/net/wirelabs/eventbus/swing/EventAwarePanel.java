@@ -7,9 +7,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 
-public abstract class EventAwarePanel extends JPanel  {
+public abstract class EventAwarePanel extends JPanel {
 
     protected abstract void onEvent(Event evt);
+
     protected abstract Collection<IEventType> subscribeEvents();
 
     private final transient EventBusClient client;
@@ -20,7 +21,7 @@ public abstract class EventAwarePanel extends JPanel  {
 
             @Override
             public void onEvent(Event evt) {
-                SwingUtilities.invokeLater(() -> EventAwarePanel.this.onEvent(evt));
+                EventAwarePanel.this.onEvent(evt);
             }
 
             @Override
@@ -32,7 +33,7 @@ public abstract class EventAwarePanel extends JPanel  {
         };
     }
 
-    public void subscribe(IEventType ... eventTypes) {
+    public void subscribe(IEventType... eventTypes) {
         EventBus.subscribe(client, eventTypes);
     }
 }
