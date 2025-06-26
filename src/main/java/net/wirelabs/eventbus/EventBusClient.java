@@ -21,7 +21,7 @@ public abstract class EventBusClient implements EventExecutor {
 
     protected EventBusClient() {
         Collection<IEventType> events = subscribeEvents();
-        if (events != null) {
+        if (events != null && !events.isEmpty()) {
             EventBus.subscribe(this, events.toArray(new IEventType[0]));
         }
     }
