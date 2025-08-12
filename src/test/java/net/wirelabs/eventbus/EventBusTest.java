@@ -202,5 +202,31 @@ class EventBusTest extends BaseTest {
 
     }
 
+    @Test
+    void shouldResetAndShutdownBus() {
+        // initial state
+        EventBusClient client2 = new TestClient();
+        EventBusClient client3 = new TestClient();
+        client2.subscribe(EventTypes.EVENT_1, EventTypes.EVENT_2);
+        client3.subscribe(EventTypes.EVENT_1);
+        // emit dead event
+        EventBus.publish(EVENT_4,null);
+
+        // assert state
+        assertThat(EventBus.getUniqueClients()).isNotEmpty();
+        assertThat(EventBus.getSubscribersByEventType()).isNotEmpty();
+        assertThat(EventBus.getDeadEvents()).isNotEmpty();
+
+        // emit reset
+        EventBus.reset();
+
+        // assert all reset
+        Awaitility.waitAtMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+            assertThat(EventBus.getDeadEvents()).isEmpty();
+            assertThat(EventBus.getUniqueClients()).isEmpty();
+            assertThat(EventBus.getSubscribersByEventType()).isEmpty();
+            logVerifier.verifyLogged("Resetting EventBus to initial state");
+        });
+    }
 
 }

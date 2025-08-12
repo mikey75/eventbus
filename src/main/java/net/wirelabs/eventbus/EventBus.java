@@ -26,8 +26,16 @@ public class EventBus {
     public static void shutdown() {
         log.info("Shutting down the EventBus");
         // stop all clients
-        stopAllClients();
+        stopAllClients(true);
         // finally clear the lists (they're static) just in case
+        clearState();
+    }
+    public static void reset() {
+        // basically the same as shutdown,
+        // but not forcing executor thread pool shutdown
+        // just clear state to initial
+        log.info("Resetting EventBus to initial state");
+        stopAllClients(false);
         clearState();
     }
 
@@ -80,7 +88,7 @@ public class EventBus {
         subscribersByEventType.clear();
     }
 
-    private static void stopAllClients() {
+    private static void stopAllClients(boolean shutdownExecutor) {
         for (EventBusClient client : uniqueClients) {
             log.info("Stopping client: {}", client);
             client.stop();
@@ -93,7 +101,7 @@ public class EventBus {
 
         }
         // if pool is still not empty -> shutdown executor the hard way
-        if (!((ThreadPoolExecutor) executorService).getQueue().isEmpty()){
+        if (shutdownExecutor && !((ThreadPoolExecutor) executorService).getQueue().isEmpty()) {
             executorService.shutdown();
         }
     }
