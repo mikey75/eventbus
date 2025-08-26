@@ -6,20 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventBus {
 
     @Getter
-    private static final Map<IEventType, Set<EventBusClient>> subscribersByEventType = new HashMap<>();
+    private static final ConcurrentHashMap<IEventType, ConcurrentHashMap.KeySetView<EventBusClient,Boolean>> subscribersByEventType = new ConcurrentHashMap<>();
     @Getter
-    private static final Set<EventBusClient> uniqueClients = new HashSet<>();
+    private static final ConcurrentHashMap.KeySetView<EventBusClient,Boolean> uniqueClients = ConcurrentHashMap.newKeySet();
     @Getter
-    private static final List<Event> deadEvents = new ArrayList<>();
+    private static final List<Event> deadEvents = new CopyOnWriteArrayList<>();
     @Getter
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -38,8 +36,7 @@ public class EventBus {
      */
     public static void subscribe(EventBusClient client, IEventType... eventTypes) {
         for (IEventType evt : eventTypes) {
-            subscribersByEventType.computeIfAbsent(evt, k -> new HashSet<>());
-            subscribersByEventType.get(evt).add(client);
+            subscribersByEventType.computeIfAbsent(evt, k -> ConcurrentHashMap.newKeySet()).add(client);
             uniqueClients.add(client);
         }
     }
@@ -54,8 +51,7 @@ public class EventBus {
         IEventType evt = event.getEventType();
 
         if (subscribersByEventType.containsKey(evt)) {
-            Set<EventBusClient> subs = subscribersByEventType.get(evt);
-            for (EventBusClient client : subs) {
+            for (EventBusClient client : subscribersByEventType.get(evt)) {
                 client.getEventsQueue().add(event);
             }
         } else {
