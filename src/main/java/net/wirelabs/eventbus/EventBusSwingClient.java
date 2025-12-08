@@ -1,13 +1,14 @@
 package net.wirelabs.eventbus;
 
+import javax.swing.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class EventBusClient {
+public class EventBusSwingClient extends JPanel {
 
     private final Map<Class<? extends Event<?>>, Method> eventHandlers = new HashMap<>();
 
-    protected EventBusClient() {
+    protected EventBusSwingClient() {
         scanEventHandlers();
         EventBus.registerClient(this); // auto-register
     }
@@ -33,6 +34,7 @@ public class EventBusClient {
 
     void dispatch(Event<?> event) {
 
+
         List<Method> handlers = new ArrayList<>();
         for (Map.Entry<Class<? extends Event<?>>, Method> entry : eventHandlers.entrySet()) {
             if (entry.getKey().isAssignableFrom(event.getClass())) {
@@ -41,12 +43,9 @@ public class EventBusClient {
         }
 
         for (Method method : handlers) {
-            Runnable eventTask = Util.createTask(this, method, event);
+            Runnable eventTask = Util.createTask(this,method,event);
             Util.serviceEvent(eventTask);
         }
     }
-
-
-
 
 }

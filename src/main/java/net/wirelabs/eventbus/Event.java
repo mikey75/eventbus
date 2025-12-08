@@ -1,11 +1,11 @@
 package net.wirelabs.eventbus;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Getter
-public class Event {
-    private final IEventType eventType;
-    private final Object payload;
+public abstract class Event<T> {
+    private final T payload;
+    protected Event(T payload) {
+        this.payload = payload;
+    }
 }
